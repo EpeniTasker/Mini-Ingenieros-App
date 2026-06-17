@@ -182,39 +182,12 @@
 
     <script>
         // ==========================================
-        // BASE DE DATOS DE PROYECTOS (Sacados de tu Drive)
+        // 🔗 ENLACE DE TU GOOGLE SHEETS (TSV)
         // ==========================================
-        const proyectos = [
-            // 🚗 Vehículos Motorizados
-            { id: 1, category: "🚗 Vehículos Motorizados", title: "Construye un Camión Pepsi", icon: "🚚", mat: ["Latas vacías", "Silicona", "Tapas de botella", "Motor DC"], url: "dQw4w9WgXcQ" },
-            { id: 2, category: "🚗 Vehículos Motorizados", title: "Mario Kart Casero", icon: "🏎️", mat: ["Cartón", "Motor DC", "Gomas elásticas", "Interruptor"], url: "tgbNymZ7vqY" },
-            { id: 3, category: "🚗 Vehículos Motorizados", title: "Coche eléctrico con botella PET", icon: "🚙", mat: ["Botella de plástico", "Motor pequeño", "Pilas", "Ruedas"], url: "J---aiyznGQ" },
-            
-            // ✈️ Aeronáutica y Vuelo
-            { id: 4, category: "✈️ Aeronáutica y Vuelo", title: "Avión Increíble con Rollo de Papel", icon: "✈️", mat: ["Rollo de cartón", "Cartulina", "Pegamento", "Tijeras"], url: "dQw4w9WgXcQ" },
-            { id: 5, category: "✈️ Aeronáutica y Vuelo", title: "Helicóptero con Globo", icon: "🚁", mat: ["Globo", "Hélices de plástico", "Boquilla"], url: "tgbNymZ7vqY" },
-            { id: 6, category: "✈️ Aeronáutica y Vuelo", title: "Cohete Volador a la Luna", icon: "🚀", mat: ["Botella", "Cartón", "Vinagre", "Bicarbonato"], url: "J---aiyznGQ" },
-
-            // 🤖 Robótica y Mecánica
-            { id: 7, category: "🤖 Robótica y Mecánica", title: "Mano de Robot de Paja", icon: "🦾", mat: ["Pajitas (Pitillos)", "Hilo grueso", "Tijeras", "Cinta adhesiva"], url: "dQw4w9WgXcQ" },
-            { id: 8, category: "🤖 Robótica y Mecánica", title: "WALL-E Miniatura", icon: "🗑️", mat: ["Cartón", "Pintura amarilla", "2 Leds", "Pilas de reloj"], url: "tgbNymZ7vqY" },
-            { id: 9, category: "🤖 Robótica y Mecánica", title: "Mano de Policía Robot", icon: "🤖", mat: ["Cartón", "Cuerda", "Ligas", "Silicón"], url: "J---aiyznGQ" },
-
-            // 🎮 Juegos Arcade
-            { id: 10, category: "🎮 Juegos Arcade", title: "Mini Basket / Baloncesto NBA", icon: "🏀", mat: ["Cartón", "Pelota de ping pong", "Paletas de helado"], url: "dQw4w9WgXcQ" },
-            { id: 11, category: "🎮 Juegos Arcade", title: "Máquina de Bolas", icon: "🎰", mat: ["Cartón grande", "Canicas", "Gomas elásticas", "Palitos"], url: "tgbNymZ7vqY" },
-            { id: 12, category: "🎮 Juegos Arcade", title: "Fútbol de Mesa", icon: "⚽", mat: ["Caja de zapatos", "Palitos de madera", "Pinzas de ropa"], url: "J---aiyznGQ" },
-
-            // 🦸‍♂️ Acción y Superhéroes
-            { id: 13, category: "🦸‍♂️ Acción y Superhéroes", title: "Garras de Wolverine de Cartón", icon: "🐾", mat: ["Cartón grueso", "Pega", "Regla", "Cúter"], url: "dQw4w9WgXcQ" },
-            { id: 14, category: "🦸‍♂️ Acción y Superhéroes", title: "Pistola Espía Hidráulica", icon: "🔫", mat: ["Jeringas", "Manguera delgada", "Agua", "Cartón"], url: "tgbNymZ7vqY" },
-            { id: 15, category: "🦸‍♂️ Acción y Superhéroes", title: "Arma Super Héroe", icon: "🛡️", mat: ["Cartón", "Gomas", "Pintura"], url: "J---aiyznGQ" },
-
-            // 💡 Inventos Curiosos
-            { id: 16, category: "💡 Inventos Curiosos", title: "Cajero Automático (Alcancía)", icon: "🏧", mat: ["Caja de cartón", "Motor pequeño", "Pilas", "Cables"], url: "dQw4w9WgXcQ" },
-            { id: 17, category: "💡 Inventos Curiosos", title: "Dispensador de Dulces", icon: "🍬", mat: ["Cartón", "Botella plástica", "Silicona", "Dulces"], url: "tgbNymZ7vqY" },
-            { id: 18, category: "💡 Inventos Curiosos", title: "Mini Filtro de Agua", icon: "💧", mat: ["Botella plástica", "Algodón", "Arena", "Piedras pequeñas"], url: "J---aiyznGQ" }
-        ];
+        // PEGA AQUÍ EL ENLACE QUE TE DIO GOOGLE AL PUBLICAR COMO (.tsv)
+        const URL_GOOGLE_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTW_uOBoS-7n8cRsslSpc3TEyS0PpsMeTaKWc9uAafNlOQmgY0J7VJuhYUqSMXNqLmyynzONq82LlPp/pub?output=tsv"; 
+        
+        let proyectos = []; // Ahora la base de datos empieza vacía y se llena sola
 
         // ==========================================
         // CONFIGURACIÓN DE SEGURIDAD
@@ -238,10 +211,6 @@
             player: document.getElementById('view-player')
         };
 
-        const svgIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" fill="#f59e0b" rx="100"/><text x="50%" y="55%" font-size="250" fill="white" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="middle" font-weight="bold">M-I</text></svg>';
-        const iconDataUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgIcon);
-        document.getElementById('apple-icon-placeholder').href = iconDataUrl;
-
         const manifestJSON = {
             "name": "Mini-Ingenieros",
             "short_name": "Ingenieros",
@@ -263,8 +232,7 @@
             // VERIFICACIÓN DE INSTALACIÓN (PWA)
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
             
-            // IMPORTANTE: Para que puedas probarlo en tu PC ahora mismo, el bloqueo está en "false".
-            // Para producción, debes cambiar "if(false)" por "if(!isStandalone)"
+            // IMPORTANTE: Cambia if(false) a if(!isStandalone) para producción
             if (false) { 
                 showView('browser');
                 return; 
@@ -280,9 +248,8 @@
             // CONTROL DE ACCESO
             if (isActivated) {
                 document.getElementById('header-status').innerText = "VIP";
-                document.getElementById('header-status').style.background = "#10b981"; // Verde VIP
-                initCatalog();
-                showView('catalog');
+                document.getElementById('header-status').style.background = "#10b981";
+                cargarBaseDeDatos(); // ⬅️ Cargamos el Excel
             } else {
                 if (!firstOpenTime) {
                     firstOpenTime = Date.now();
@@ -295,8 +262,7 @@
                     const hoursLeft = Math.ceil(TRIAL_HOURS - hoursElapsed);
                     document.getElementById('trial-banner').style.display = 'block';
                     document.getElementById('trial-hours-left').innerText = hoursLeft;
-                    initCatalog();
-                    showView('catalog');
+                    cargarBaseDeDatos(); // ⬅️ Cargamos el Excel
                 } else {
                     document.getElementById('header-status').innerText = "Bloqueado";
                     document.getElementById('header-status').style.background = "#ef4444";
@@ -304,6 +270,50 @@
                 }
             }
         };
+
+        // ==========================================
+        // MOTOR LECTOR DE GOOGLE SHEETS
+        // ==========================================
+        function cargarBaseDeDatos() {
+            const catalogContainer = document.getElementById('catalog-container');
+            catalogContainer.innerHTML = '<p style="text-align:center; padding: 40px; color:#94a3b8;">⏳ Cargando proyectos...</p>';
+            
+            fetch(URL_GOOGLE_SHEET)
+                .then(response => response.text())
+                .then(data => {
+                    procesarDatosExcel(data);
+                    initCatalog();
+                    showView('catalog');
+                })
+                .catch(error => {
+                    console.error("Error al cargar la base de datos:", error);
+                    catalogContainer.innerHTML = '<p style="text-align:center; color:#ef4444;">⚠️ Error de conexión. Revisa tu internet o el enlace del Excel.</p>';
+                });
+        }
+
+        function procesarDatosExcel(textoTSV) {
+            proyectos = [];
+            const filas = textoTSV.split('\n');
+            
+            // Ignoramos la fila 0 (Los encabezados)
+            for (let i = 1; i < filas.length; i++) {
+                const fila = filas[i].trim();
+                if (!fila) continue; // Saltar filas vacías
+                
+                const columnas = fila.split('\t'); // Separamos por tabulador
+                
+                if (columnas.length >= 5) {
+                    proyectos.push({
+                        id: i,
+                        category: columnas[0].trim(),
+                        title: columnas[1].trim(),
+                        icon: columnas[2].trim(),
+                        mat: columnas[3].split(',').map(m => m.trim()), // Separamos los materiales por comas
+                        url: columnas[4].trim()
+                    });
+                }
+            }
+        }
 
         function initCatalog() {
             const catalogContainer = document.getElementById('catalog-container');
