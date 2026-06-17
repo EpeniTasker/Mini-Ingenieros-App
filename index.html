@@ -3,155 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <meta name="theme-color" content="#f59e0b">
+    <!-- Para que la App se vea como nativa -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Mini-Ingenieros">
-    <link id="manifest-placeholder" rel="manifest" href="">
+    <title>Mini-Ingenieros</title>
 
-    <title>Mini-Ingenieros | Catálogo</title>
-    
     <style>
         :root {
-            --primary: #f59e0b; /* Naranja Ingeniero */
-            --primary-dark: #d97706;
-            --secondary: #0f766e; /* Teal */
-            --bg-color: #f1f5f9;
-            --text-color: #334155;
-            --card-bg: #ffffff;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #ea580c; /* Naranja Ingenieros */
+            --primary-hover: #c2410c;
+            --accent: #0f766e; /* Teal */
+            --danger: #ef4444;
         }
 
-        /* CAPA DE SEGURIDAD 3: Bloqueo de selección y arrastre */
-        * { 
-            box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; 
-            user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;
-            -webkit-touch-callout: none;
-        }
-        
-        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
 
-        header { 
-            background: var(--primary); padding: 15px; text-align: center; color: white; 
-            font-weight: bold; font-size: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-            position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center;
-        }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
 
-        .container { width: 100%; max-width: 800px; margin: 0 auto; padding: 20px; flex: 1; display: flex; flex-direction: column; }
+        .container { max-width: 800px; margin: 0 auto; padding: 15px; }
 
-        .view { display: none; animation: fadeIn 0.4s ease; flex: 1; }
+        /* Vistas y Animaciones */
+        .view { display: none; animation: fadeIn 0.4s ease; padding-bottom: 30px; }
         .view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .install-lock { background: #fee2e2; border: 3px dashed #ef4444; border-radius: 15px; padding: 30px 20px; text-align: center; margin-top: 20px; }
-        .install-lock h2 { color: #b91c1c; margin-bottom: 15px; }
-        .instruction-box { background: white; border-radius: 10px; padding: 15px; margin-top: 20px; text-align: left; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .instruction-box h3 { color: var(--secondary); margin-bottom: 10px; }
-        
-        .activation-box { border: 3px solid #ef4444; background: white; padding: 30px 20px; border-radius: 15px; text-align: center; margin-top: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .device-code { font-size: 42px; font-weight: bold; color: #ef4444; letter-spacing: 4px; margin: 20px 0; font-family: monospace; background: #fef2f2; padding: 10px; border-radius: 10px; }
-        input[type="number"] { width: 100%; font-size: 22px; text-align: center; padding: 15px; border: 2px solid #cbd5e1; border-radius: 10px; margin-bottom: 15px; outline: none; }
+        /* Botones */
+        .btn { display: inline-block; width: 100%; padding: 15px; font-size: 16px; font-weight: bold; color: white; border: none; border-radius: 8px; cursor: pointer; transition: 0.2s; text-align: center; }
+        .btn:active { transform: scale(0.98); }
+        .btn-orange { background-color: var(--primary); }
+        .btn-orange:hover { background-color: var(--primary-hover); }
+        .btn-whatsapp { background-color: #25D366; margin-bottom: 15px; }
+
+        /* HEADER */
+        header { background-color: rgba(15, 23, 42, 0.95); padding: 15px; text-align: center; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); display: flex; justify-content: space-between; align-items: center; }
+        .logo { color: var(--primary); font-size: 20px; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+        .trial-badge { background: #334155; color: #fbbf24; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+
+        /* PANTALLA DE INSTALACIÓN (PWA) */
+        .install-lock { background: var(--card-bg); padding: 30px 20px; border-radius: 15px; text-align: center; border: 2px dashed var(--primary); margin-top: 30px; }
+        .instruction-box { background: #0f172a; padding: 15px; border-radius: 8px; margin-bottom: 10px; text-align: left; font-size: 14px; border-left: 4px solid var(--primary); }
+        .instruction-box h3 { color: var(--primary); margin-bottom: 5px; font-size: 16px; }
+
+        /* PANTALLA DE ACTIVACIÓN (CANDADO) */
+        .activation-container { background: var(--card-bg); padding: 30px 20px; border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-top: 4px solid var(--danger); margin-top: 30px; }
+        .device-code { font-size: 38px; font-weight: bold; color: var(--primary); letter-spacing: 2px; margin: 15px 0; font-family: monospace; }
+        input[type="number"] { width: 100%; padding: 15px; font-size: 20px; text-align: center; border: 2px solid #334155; background: var(--bg-color); color: white; border-radius: 8px; margin-bottom: 20px; outline: none; }
         input[type="number"]:focus { border-color: var(--primary); }
 
-        .btn { display: inline-block; width: 100%; padding: 15px; font-size: 16px; font-weight: bold; border: none; border-radius: 50px; cursor: pointer; transition: 0.2s; color: white; margin-bottom: 15px; text-align: center; }
-        .btn:active { transform: scale(0.96); }
-        .btn-orange { background: var(--primary); box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3); }
-        .btn-whatsapp { background: #25D366; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3); }
+        /* CATÁLOGO DE PROYECTOS */
+        .category-title { font-size: 22px; color: var(--text-main); margin: 30px 0 15px 0; padding-bottom: 5px; border-bottom: 2px solid var(--primary); display: inline-block; }
+        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .course-card { background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid #334155; cursor: pointer; transition: transform 0.2s; }
+        .course-card:active { transform: scale(0.98); }
+        .course-img { width: 100%; height: 140px; background-color: #0f172a; display: flex; align-items: center; justify-content: center; font-size: 50px; }
+        .course-info { padding: 15px; }
+        .course-title { font-size: 16px; margin-bottom: 8px; color: white; font-weight: bold; line-height: 1.3; }
+        .course-mat { font-size: 12px; color: var(--text-muted); line-height: 1.4; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        .trial-banner { background: #dbeafe; color: #1e40af; padding: 12px; border-radius: 10px; text-align: center; font-weight: bold; margin-bottom: 20px; border: 1px solid #bfdbfe; }
+        /* REPRODUCTOR DE VIDEO Y ESCUDOS */
+        .video-player-container { background: var(--card-bg); border-radius: 12px; padding: 15px; margin-top: 15px; }
+        .video-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .back-btn { background: transparent; color: var(--primary); border: 1px solid var(--primary); padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .fullscreen-btn { background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 5px; }
         
-        .category-title { font-size: 17px; font-weight: bold; color: var(--secondary); margin: 25px 0 12px 0; display: flex; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; text-transform: uppercase; }
-        
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; margin-bottom: 10px; }
-        .video-card { background: var(--card-bg); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; cursor: pointer; transition: transform 0.2s; }
-        .video-card:active { transform: scale(0.95); }
-        
-        .thumb-placeholder { width: 100%; height: 100px; background: linear-gradient(135deg, #cbd5e1, #94a3b8); display: flex; align-items: center; justify-content: center; font-size: 40px; position: relative; }
-        .play-icon { position: absolute; background: rgba(0,0,0,0.5); color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        
-        .video-info { padding: 10px; }
-        .video-title { font-size: 13px; font-weight: bold; color: var(--text-color); line-height: 1.3; }
-
-        .player-header { display: flex; align-items: center; margin-bottom: 15px; gap: 10px; }
-        .btn-back { background: #e2e8f0; color: #334155; border: none; padding: 10px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; }
-        .player-title { font-size: 18px; font-weight: bold; color: var(--secondary); }
-        
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000; border-radius: 8px; overflow: hidden; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
         
-        /* CAPA DE SEGURIDAD 4: Escudos de Cristal Anti-Fugas de YouTube */
-        .glass-shield-top { position: absolute; top: 0; left: 0; width: 100%; height: 90px; z-index: 50; background: transparent; }
-        .glass-shield-bottom { position: absolute; bottom: 0; left: 0; width: 100%; height: 80px; z-index: 50; background: transparent; }
+        /* ESCUDOS DE CRISTAL GIGANTES (Protección contra YouTube) */
+        .glass-shield-top { position: absolute; top: 0; left: 0; width: 100%; height: 90px; background: transparent; z-index: 10; }
+        .glass-shield-bottom { position: absolute; bottom: 0; left: 0; width: 100%; height: 80px; background: transparent; z-index: 10; }
 
-        .materials-box { background: white; border-radius: 12px; padding: 15px; margin-top: 20px; border: 1px solid #e2e8f0; }
-        .materials-box h3 { color: var(--primary-dark); margin-bottom: 10px; font-size: 16px; }
-        .materials-list { list-style-type: none; font-size: 14px; color: #64748b; }
-        .materials-list li { margin-bottom: 5px; padding-left: 20px; position: relative; }
-        .materials-list li::before { content: '⚙️'; position: absolute; left: 0; top: 0; font-size: 12px; }
+        /* MODO PANTALLA COMPLETA PERSONALIZADO */
+        .video-wrapper:fullscreen { padding-bottom: 0; height: 100vh; background: black; display: flex; align-items: center; justify-content: center; }
+        .video-wrapper:fullscreen iframe { position: relative; width: 100vw; height: 100vh; }
+        
+        /* Detalles del Proyecto en el Reproductor */
+        .project-details { margin-top: 20px; }
+        .project-details h2 { color: var(--primary); font-size: 20px; margin-bottom: 10px; }
+        .materials-list { background: #0f172a; padding: 15px; border-radius: 8px; border-left: 4px solid var(--accent); font-size: 14px; color: #cbd5e1; line-height: 1.6; }
 
+        /* Mensajes de Estado */
+        .status-msg { text-align: center; padding: 40px 20px; font-size: 18px; color: var(--text-muted); }
+        #activation-error { color: var(--danger); display: none; margin-top: 15px; font-weight: bold; background: rgba(239, 68, 68, 0.1); padding: 10px; border-radius: 8px; }
+
+        /* Evitar selección de texto para mayor seguridad */
+        .noselect { -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
     </style>
 </head>
-<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;"> 
+<body class="noselect" oncontextmenu="return false;"> <!-- Bloquea clic derecho a nivel de body -->
 
     <header>
-        <div>👷‍♂️ Mini-Ingenieros</div>
-        <div id="header-status" style="font-size: 12px; background: rgba(0,0,0,0.2); padding: 4px 10px; border-radius: 20px;">Catálogo</div>
+        <div class="logo">👷‍♂️ Mini-Ingenieros</div>
+        <div class="trial-badge" id="header-badge">⏳ Cargando...</div>
     </header>
 
     <div class="container">
         
+        <!-- VISTA 1: BLOQUEO DE INSTALACIÓN (Navegador) -->
         <div id="view-browser" class="view">
             <div class="install-lock">
-                <h2>⚠️ Acceso Restringido</h2>
-                <p>Para iniciar tu prueba gratuita de 48 horas y ver los videos, <strong>debes guardar esta plataforma en la pantalla principal de tu celular.</strong></p>
-                <div class="instruction-box">
-                    <h3>🤖 Android (Chrome):</h3>
-                    <p>1. Toca los 3 puntitos (⋮) arriba a la derecha.<br>2. Selecciona <strong>"Añadir a pantalla de inicio"</strong>.</p>
+                <h2>⚠️ Paso Obligatorio</h2>
+                <p style="margin: 15px 0; color: #cbd5e1;">Para iniciar tu prueba gratuita de 48 horas y desbloquear los videos, <strong>debes instalar esta plataforma en tu celular.</strong></p>
+                
+                <!-- BOTÓN INTELIGENTE (Solo aparecerá en Android compatible) -->
+                <button id="btn-smart-install" class="btn btn-orange" style="display: none; margin-bottom: 20px; font-size: 18px; box-shadow: 0 4px 15px rgba(234, 88, 12, 0.4);">
+                    ⬇️ Haz Clic Aquí para Instalar la App
+                </button>
+
+                <div id="manual-instructions">
+                    <div class="instruction-box">
+                        <h3>🤖 Si usas Android (Chrome):</h3>
+                        <p>1. Toca los 3 puntitos (⋮) arriba a la derecha.<br>2. Selecciona <strong>"Instalar aplicación"</strong> o <strong>"Añadir a pantalla de inicio"</strong>.</p>
+                    </div>
+                    <div class="instruction-box">
+                        <h3>🍎 Si usas iPhone (Safari):</h3>
+                        <p>1. Toca Compartir (cuadrado con flecha arriba) abajo.<br>2. Selecciona <strong>"Agregar a inicio" (+)</strong>.</p>
+                    </div>
                 </div>
-                <div class="instruction-box">
-                    <h3>🍎 iPhone (Safari):</h3>
-                    <p>1. Toca Compartir (cuadrado con flecha arriba) abajo.<br>2. Selecciona <strong>"Agregar a inicio" (+)</strong>.</p>
-                </div>
-                <p style="margin-top: 20px; font-size: 14px; color: #ef4444; font-weight: bold;">Cierra esta ventana y abre el nuevo ícono "Mini-Ingenieros" en tu celular para continuar.</p>
+                <p style="margin-top: 20px; font-size: 14px; color: var(--danger); font-weight: bold;">Cierra esta ventana, ve a tu pantalla principal y abre el nuevo ícono "Mini-Ingenieros" para continuar.</p>
             </div>
         </div>
 
+        <!-- VISTA 2: BLOQUEO DE ACTIVACIÓN (Fin de Prueba) -->
         <div id="view-activation" class="view">
-            <div class="activation-box">
-                <h2 style="color: #334155;">Licencia Requerida 🔒</h2>
-                <p style="color: #64748b; font-size: 14px; margin-top: 10px;">Tu período de prueba ha finalizado o necesitas activar este dispositivo.</p>
-                <div class="device-code" id="display-device-code">MI-0000</div>
-                <button class="btn btn-whatsapp" onclick="requestKey()">💬 Enviar Código a María</button>
-                <div style="margin-top: 20px; text-align: left;">
-                    <label style="font-size: 13px; font-weight: bold; color: #64748b;">Ingresa tu clave de desbloqueo:</label>
-                    <input type="number" id="input-activation-key" placeholder="Ej: 8452" inputmode="numeric">
+            <div class="activation-container">
+                <h2 style="margin-bottom: 10px; color: var(--text-main);">Prueba Terminada 🔒</h2>
+                <p style="color: var(--text-muted); font-size: 14px;">Tus 48 horas de acceso gratuito han finalizado. Para seguir disfrutando de los proyectos, ingresa la clave de tu licencia vitalicia.</p>
+                
+                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin: 20px 0;">
+                    <p style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Código de Dispositivo</p>
+                    <div class="device-code" id="display-device-code">MI-0000</div>
                 </div>
+
+                <button class="btn btn-whatsapp" onclick="requestKey()">
+                    💬 Comprar Licencia por WhatsApp
+                </button>
+
+                <input type="number" id="input-activation-key" placeholder="Ingresa tu clave aquí" inputmode="numeric">
                 <button class="btn btn-orange" onclick="verifyKey()">Desbloquear Catálogo 🔓</button>
-                <p id="activation-error" style="color: #ef4444; display: none; font-weight: bold;">❌ Clave incorrecta. Intenta de nuevo.</p>
+                <p id="activation-error">❌ Clave incorrecta. Verifica tu número.</p>
             </div>
         </div>
 
+        <!-- VISTA 3: CATÁLOGO PRINCIPAL (La Vitrina) -->
         <div id="view-catalog" class="view">
-            <div id="trial-banner" class="trial-banner" style="display:none;">
-                ⏳ Prueba Gratis: Te quedan <span id="trial-hours-left">48</span> horas.
+            <p style="color: var(--text-muted); margin-top: 10px;">Selecciona un proyecto y reúne los materiales antes de empezar.</p>
+            
+            <div id="catalog-container">
+                <div class="status-msg">⏳ Cargando proyectos desde el servidor...</div>
             </div>
-            <p style="margin-bottom: 10px; text-align: center; color: #64748b; font-size: 14px;">Selecciona un proyecto y ¡manos a la obra!</p>
-            
-            <div id="catalog-container"></div>
-            
-            <p style="text-align:center; color:#94a3b8; font-size:12px; margin-top:40px; padding-bottom: 20px;">© 2026 Mini-Ingenieros VIP</p>
         </div>
 
+        <!-- VISTA 4: REPRODUCTOR DE VIDEO -->
         <div id="view-player" class="view">
-            <div class="player-header">
-                <button class="btn-back" onclick="closePlayer()">⬅ Volver</button>
-                <div class="player-title" id="player-title">Cargando...</div>
-            </div>
-            <div class="video-wrapper" id="video-container"></div>
-            <div class="materials-box">
-                <h3>Materiales Necesarios:</h3>
-                <ul class="materials-list" id="player-materials"></ul>
+            <div class="video-player-container">
+                <div class="video-header">
+                    <button class="back-btn" onclick="showView('catalog')">⬅ Volver</button>
+                    <button class="fullscreen-btn" onclick="goFullscreen()">🔲 Pantalla Completa</button>
+                </div>
+                
+                <!-- Contenedor estirable para Fullscreen -->
+                <div class="video-wrapper" id="video-wrapper">
+                    <!-- Los Escudos de Cristal Anti-YouTube -->
+                    <div class="glass-shield-top"></div>
+                    <div class="glass-shield-bottom"></div>
+                    <!-- El iFrame se inyecta aquí -->
+                    <div id="iframe-container"></div>
+                </div>
+                
+                <div class="project-details">
+                    <h2 id="video-title">Título del Proyecto</h2>
+                    <p style="color: var(--primary); font-weight: bold; margin-bottom: 5px; font-size: 14px;">🛠️ Materiales necesarios:</p>
+                    <div class="materials-list" id="video-materials"></div>
+                </div>
             </div>
         </div>
 
@@ -159,17 +188,22 @@
 
     <script>
         // ==========================================
-        // 🔗 ENLACE DE TU GOOGLE SHEETS (TSV)
+        // ⚙️ CONFIGURACIÓN DEL SISTEMA
         // ==========================================
-        const URL_GOOGLE_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTW_uOBoS-7n8cRsslSpc3TEyS0PpsMeTaKWc9uAafNlOQmgY0J7VJuhYUqSMXNqLmyynzONq82LlPp/pub?output=tsv"; 
         
-        let proyectos = []; 
-        const PHONE_NUMBER = "584265810670";
+        // 1. EL ENLACE DE TU GOOGLE SHEETS (Formato TSV)
+        const URL_GOOGLE_SHEET = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTW_uOBoS-7n8cRsslSpc3TEyS0PpsMeTaKWc9uAafNlOQmgY0J7VJuhYUqSMXNqLmyynzONq82LlPp/pub?output=tsv";
+        
+        // 2. SEGURIDAD Y CONTACTO
+        const PHONE_NUMBER = "584265810670"; 
+        const SECRET_MULTIPLIER = 9;  // Fórmula Mini-Ingenieros
+        const SECRET_ADDITION = 384;  // Fórmula Mini-Ingenieros
+        const PREFIX = "MI-";
         const TRIAL_HOURS = 48;
-        const SECRET_MULTIPLIER = 9;
-        const SECRET_ADDITION = 384;
 
-        let isActivated = localStorage.getItem('mi_activated') === 'true';
+        // Variables de Estado
+        let proyectosGlobal = [];
+        let isActivated = localStorage.getItem('mi_app_activated') === 'true';
         let myDeviceCode = localStorage.getItem('mi_device_code');
         let firstOpenTime = localStorage.getItem('mi_first_open');
 
@@ -180,193 +214,264 @@
             player: document.getElementById('view-player')
         };
 
-        function showView(viewName) {
-            for (let key in views) views[key].classList.remove('active');
-            views[viewName].classList.add('active');
-        }
+        // ==========================================
+        // 📲 LÓGICA DEL BOTÓN MÁGICO DE INSTALACIÓN (PWA)
+        // ==========================================
+        let deferredPrompt;
+        const installBtn = document.getElementById('btn-smart-install');
 
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Evita que el navegador muestre su propia barra
+            e.preventDefault();
+            // Guarda el evento para poder dispararlo luego
+            deferredPrompt = e;
+            // Muestra nuestro botón gigante naranja
+            installBtn.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                // Muestra el prompt nativo de instalación
+                deferredPrompt.prompt();
+                // Espera a que el usuario decida
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('User accepted install');
+                }
+                // Limpia la variable y esconde el botón
+                deferredPrompt = null;
+                installBtn.style.display = 'none';
+            }
+        });
+
+        // ==========================================
+        // 🚀 INICIALIZACIÓN
+        // ==========================================
         window.onload = function() {
-            // IMPORTANTE: Para pruebas en PC déjalo en (false). 
-            // Para producción y forzar instalación PWA cámbialo a (!isStandalone)
+            // DETECCIÓN PWA (Verifica si abrió desde el ícono instalado)
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-            if (false) { 
+            
+            // EL CANDADO: Si está en el navegador normal, bloquéalo.
+            // NOTA: Cámbialo a `if(!isStandalone)` para activar la seguridad real en producción.
+            if (!isStandalone) { 
                 showView('browser');
                 return; 
             }
 
+            // Si es la primera vez que entra a la App instalada
+            if (!firstOpenTime) {
+                firstOpenTime = Date.now();
+                localStorage.setItem('mi_first_open', firstOpenTime);
+            }
             if (!myDeviceCode) {
                 myDeviceCode = Math.floor(Math.random() * 9000) + 1000;
                 localStorage.setItem('mi_device_code', myDeviceCode);
             }
-            document.getElementById('display-device-code').innerText = `MI-${myDeviceCode}`;
 
-            if (isActivated) {
-                document.getElementById('header-status').innerText = "VIP";
-                document.getElementById('header-status').style.background = "#10b981";
-                cargarBaseDeDatos(); 
-            } else {
-                if (!firstOpenTime) {
-                    firstOpenTime = Date.now();
-                    localStorage.setItem('mi_first_open', firstOpenTime);
-                }
-                const hoursElapsed = (Date.now() - parseInt(firstOpenTime)) / 3600000;
-                
-                if (hoursElapsed < TRIAL_HOURS) {
-                    const hoursLeft = Math.ceil(TRIAL_HOURS - hoursElapsed);
-                    document.getElementById('trial-banner').style.display = 'block';
-                    document.getElementById('trial-hours-left').innerText = hoursLeft;
-                    cargarBaseDeDatos(); 
-                } else {
-                    document.getElementById('header-status').innerText = "Bloqueado";
-                    document.getElementById('header-status').style.background = "#ef4444";
-                    showView('activation');
-                }
-            }
+            checkStatusAndLoad();
         };
 
-        function cargarBaseDeDatos() {
-            const catalogContainer = document.getElementById('catalog-container');
-            catalogContainer.innerHTML = '<p style="text-align:center; padding: 40px; color:#94a3b8;">⏳ Cargando proyectos...</p>';
+        function showView(viewName) {
+            for (let key in views) views[key].classList.remove('active');
+            views[viewName].classList.add('active');
             
-            // Forzamos a que se muestre el catálogo incluso en estado de carga o error
-            showView('catalog');
-
-            fetch(URL_GOOGLE_SHEET)
-                .then(response => {
-                    if (!response.ok) throw new Error("Error de red");
-                    return response.text();
-                })
-                .then(data => {
-                    procesarDatosExcel(data);
-                    initCatalog();
-                })
-                .catch(error => {
-                    console.error("Error al cargar:", error);
-                    catalogContainer.innerHTML = `
-                        <div style="background:#fee2e2; border:2px dashed #ef4444; padding:20px; border-radius:10px; text-align:center; margin-top:20px;">
-                            <h3 style="color:#b91c1c;">⚠️ Error de Conexión</h3>
-                            <p style="color:#7f1d1d; font-size:14px; margin-top:10px;">No se pudo conectar con el Excel. Asegúrate de haber copiado el link de <strong>"Publicar en la Web" (formato TSV)</strong> y NO el link de la barra del navegador.</p>
-                        </div>
-                    `;
-                });
-        }
-
-        function procesarDatosExcel(textoTSV) {
-            proyectos = [];
-            const filas = textoTSV.split('\n');
+            // Pausar/Destruir video si salimos del reproductor
+            if(viewName !== 'player') {
+                document.getElementById('iframe-container').innerHTML = '';
+            }
             
-            // Ignoramos la fila 0 (Los encabezados)
-            for (let i = 1; i < filas.length; i++) {
-                const fila = filas[i].trim();
-                if (!fila) continue;
-                
-                const columnas = fila.split('\t'); 
-                
-                // Hacemos el validador más flexible y a prueba de errores
-                if (columnas.length >= 2) {
-                    proyectos.push({
-                        id: i,
-                        category: columnas[0] ? columnas[0].trim() : 'Sin Categoría',
-                        title: columnas[1] ? columnas[1].trim() : 'Nuevo Proyecto',
-                        icon: columnas[2] ? columnas[2].trim() : '⚙️',
-                        mat: columnas[3] ? columnas[3].split(',').map(m => m.trim()) : ['Material sorpresa'],
-                        url: columnas[4] ? columnas[4].trim() : ''
-                    });
-                }
+            // Quitar pantalla completa al salir de la vista
+            if(document.fullscreenElement) {
+                document.exitFullscreen().catch(err => console.log(err));
             }
         }
 
-        function initCatalog() {
-            const catalogContainer = document.getElementById('catalog-container');
-            catalogContainer.innerHTML = '';
+        // ==========================================
+        // ⏳ LÓGICA DE TIEMPO Y ACTIVACIÓN
+        // ==========================================
+        function checkStatusAndLoad() {
+            const now = Date.now();
+            const elapsedHours = (now - parseInt(firstOpenTime)) / (1000 * 60 * 60);
+            const headerBadge = document.getElementById('header-badge');
 
-            // Si el excel está vacío o leyó una página web en vez de un TSV
-            if (proyectos.length === 0) {
-                catalogContainer.innerHTML = `
-                    <div style="background:#fff3cd; border:2px dashed #fbbf24; padding:20px; border-radius:10px; text-align:center; margin-top:20px;">
-                        <h3 style="color:#d97706;">⚠️ Base de Datos Vacía</h3>
-                        <p style="color:#92400e; font-size:14px; margin-top:10px;">Se conectó al link pero no se encontraron videos. Revisa que el archivo esté publicado como <strong>Valores separados por tabuladores (.tsv)</strong>.</p>
-                    </div>
-                `;
-                return;
+            if (isActivated) {
+                headerBadge.innerText = "🌟 VIP Activo";
+                headerBadge.style.color = "#10b981"; // Verde
+                fetchProjects();
+            } else if (elapsedHours < TRIAL_HOURS) {
+                const hoursLeft = Math.ceil(TRIAL_HOURS - elapsedHours);
+                headerBadge.innerText = `⏳ Quedan ${hoursLeft}h Gratis`;
+                fetchProjects();
+            } else {
+                headerBadge.innerText = "🔒 Prueba Terminada";
+                headerBadge.style.color = "#ef4444"; // Rojo
+                document.getElementById('display-device-code').innerText = `${PREFIX}${myDeviceCode}`;
+                showView('activation');
             }
-
-            const groupedProjects = proyectos.reduce((acc, curr) => {
-                if (!acc[curr.category]) acc[curr.category] = [];
-                acc[curr.category].push(curr);
-                return acc;
-            }, {});
-
-            for (const category in groupedProjects) {
-                const catTitle = document.createElement('h3');
-                catTitle.className = 'category-title';
-                catTitle.innerText = category;
-                catalogContainer.appendChild(catTitle);
-
-                const grid = document.createElement('div');
-                grid.className = 'video-grid';
-
-                groupedProjects[category].forEach(p => {
-                    const card = document.createElement('div');
-                    card.className = 'video-card';
-                    card.onclick = () => openPlayer(p);
-                    card.innerHTML = `
-                        <div class="thumb-placeholder">
-                            ${p.icon}
-                            <div class="play-icon">▶</div>
-                        </div>
-                        <div class="video-info"><div class="video-title">${p.title}</div></div>
-                    `;
-                    grid.appendChild(card);
-                });
-                catalogContainer.appendChild(grid);
-            }
-        }
-
-        function openPlayer(proyecto) {
-            document.getElementById('player-title').innerText = proyecto.title;
-            // Inyectamos los escudos invisibles y bloqueamos funciones nativas de YT (pantalla completa, teclado, anotaciones)
-            document.getElementById('video-container').innerHTML = `
-                <div class="glass-shield-top"></div>
-                <iframe src="https://www.youtube.com/embed/${proyecto.url}?controls=0&modestbranding=1&rel=0&autoplay=1&fs=0&iv_load_policy=3&disablekb=1&playsinline=1" allow="autoplay; encrypted-media"></iframe>
-                <div class="glass-shield-bottom"></div>
-            `;
-
-            const matList = document.getElementById('player-materials');
-            matList.innerHTML = '';
-            proyecto.mat.forEach(m => { matList.innerHTML += `<li>${m}</li>`; });
-
-            showView('player');
-        }
-
-        function closePlayer() {
-            document.getElementById('video-container').innerHTML = ''; // Detiene el video
-            showView('catalog');
         }
 
         function requestKey() {
-            const msg = `¡Hola María! Ya tengo la app Mini-Ingenieros instalada. Mi código de dispositivo es *MI-${myDeviceCode}*. Quiero solicitar mi clave. ⚙️`;
+            const msg = `¡Hola! Venció la prueba gratis de Mini-Ingenieros.\nMi código de dispositivo es *${PREFIX}${myDeviceCode}*.\n\nDeseo adquirir mi licencia vitalicia para desbloquear todos los proyectos.`;
             const whatsappUrl = `https://api.whatsapp.com/send?phone=${PHONE_NUMBER}&text=${encodeURIComponent(msg)}`;
             window.open(whatsappUrl, '_blank');
         }
 
         function verifyKey() {
-            const userInput = parseInt(document.getElementById('input-activation-key').value);
+            const userInput = document.getElementById('input-activation-key').value.trim();
+            const errorText = document.getElementById('activation-error');
+            
+            if(userInput === "") {
+                errorText.innerText = "❌ Ingresa una clave primero.";
+                errorText.style.display = 'block';
+                return;
+            }
+
             const correctKey = (parseInt(myDeviceCode) * SECRET_MULTIPLIER) + SECRET_ADDITION;
 
-            if (userInput === correctKey) {
-                localStorage.setItem('mi_activated', 'true');
+            if (parseInt(userInput) === correctKey) {
+                localStorage.setItem('mi_app_activated', 'true');
                 isActivated = true;
-                
-                document.getElementById('header-status').innerText = "VIP";
-                document.getElementById('header-status').style.background = "#10b981";
-                document.getElementById('trial-banner').style.display = 'none';
-                
-                cargarBaseDeDatos(); // Recargar videos al activar
+                errorText.style.display = 'none';
+                checkStatusAndLoad();
             } else {
-                const errorMsg = document.getElementById('activation-error');
-                errorMsg.style.display = 'block';
-                setTimeout(() => errorMsg.style.display = 'none', 3000);
+                errorText.innerText = "❌ Clave incorrecta. Verifica tu número.";
+                errorText.style.display = 'block';
+            }
+        }
+
+        // ==========================================
+        // 📊 CONEXIÓN A GOOGLE SHEETS
+        // ==========================================
+        async function fetchProjects() {
+            showView('catalog');
+            const container = document.getElementById('catalog-container');
+            
+            try {
+                const response = await fetch(URL_GOOGLE_SHEET);
+                if (!response.ok) throw new Error("Error de red");
+                
+                const tsvData = await response.text();
+                parseTSV(tsvData);
+                renderCatalog();
+
+            } catch (error) {
+                container.innerHTML = `
+                    <div style="background: rgba(239, 68, 68, 0.1); border: 2px dashed #ef4444; padding: 20px; border-radius: 12px; text-align: center;">
+                        <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
+                        <h3 style="color: #ef4444; margin-bottom: 10px;">Error al cargar el Catálogo</h3>
+                        <p style="color: var(--text-muted); font-size: 14px;">No pudimos conectar con la base de datos.<br>Verifica que tienes conexión a internet o que el enlace TSV es el correcto.</p>
+                    </div>
+                `;
+                console.error("Error cargando Google Sheets:", error);
+            }
+        }
+
+        function parseTSV(tsv) {
+            proyectosGlobal = [];
+            const rows = tsv.split('\n');
+            
+            // Empezamos desde i=1 para saltar la fila de encabezados
+            for (let i = 1; i < rows.length; i++) {
+                const cols = rows[i].split('\t');
+                // Si la fila tiene los 5 datos mínimos
+                if (cols.length >= 5 && cols[1].trim() !== "") {
+                    proyectosGlobal.push({
+                        id: i,
+                        category: cols[0].trim(),
+                        title: cols[1].trim(),
+                        icon: cols[2].trim() || '⚙️',
+                        materials: cols[3].trim(),
+                        videoId: cols[4].trim()
+                    });
+                }
+            }
+        }
+
+        function renderCatalog() {
+            const container = document.getElementById('catalog-container');
+            container.innerHTML = '';
+
+            if (proyectosGlobal.length === 0) {
+                container.innerHTML = '<div class="status-msg">No hay proyectos disponibles. Añádelos en tu Google Sheets.</div>';
+                return;
+            }
+
+            // Agrupar por categoría
+            const grouped = {};
+            proyectosGlobal.forEach(p => {
+                if (!grouped[p.category]) grouped[p.category] = [];
+                grouped[p.category].push(p);
+            });
+
+            // Crear el HTML por categoría
+            for (const category in grouped) {
+                const catTitle = document.createElement('h2');
+                catTitle.className = 'category-title';
+                catTitle.innerText = category;
+                container.appendChild(catTitle);
+
+                const grid = document.createElement('div');
+                grid.className = 'catalog-grid';
+
+                grouped[category].forEach(proyecto => {
+                    const card = document.createElement('div');
+                    card.className = 'course-card';
+                    card.onclick = () => openProject(proyecto);
+                    
+                    card.innerHTML = `
+                        <div class="course-img">${proyecto.icon}</div>
+                        <div class="course-info">
+                            <h3 class="course-title">${proyecto.title}</h3>
+                            <p class="course-mat">📦 ${proyecto.materials}</p>
+                            <span style="color: var(--primary); font-size: 13px; font-weight: bold;">▶ Toca para ver el proyecto</span>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+
+                container.appendChild(grid);
+            }
+        }
+
+        // ==========================================
+        // 🎬 REPRODUCTOR Y PANTALLA COMPLETA
+        // ==========================================
+        function openProject(proyecto) {
+            document.getElementById('video-title').innerText = proyecto.title;
+            document.getElementById('video-materials').innerText = proyecto.materials;
+            
+            // Inyectar el iframe dinámicamente con las protecciones de YouTube
+            // controls=0 oculta barra de abajo. modestbranding=1 oculta logo (aunque Youtube es necio).
+            document.getElementById('iframe-container').innerHTML = `
+                <iframe src="https://www.youtube.com/embed/${proyecto.videoId}?autoplay=1&controls=0&modestbranding=1&rel=0&fs=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            `;
+            
+            showView('player');
+            window.scrollTo(0, 0); // Sube la pantalla al inicio
+        }
+
+        function goFullscreen() {
+            // Tomamos todo el wrapper (que incluye el video Y los escudos invisibles)
+            const videoWrapper = document.getElementById('video-wrapper');
+            
+            if (!document.fullscreenElement) {
+                if (videoWrapper.requestFullscreen) {
+                    videoWrapper.requestFullscreen();
+                } else if (videoWrapper.webkitRequestFullscreen) { /* Safari */
+                    videoWrapper.webkitRequestFullscreen();
+                } else if (videoWrapper.msRequestFullscreen) { /* IE11 */
+                    videoWrapper.msRequestFullscreen();
+                }
+                
+                // Intentar forzar modo horizontal en el celular
+                try {
+                    screen.orientation.lock('landscape').catch(e => console.log('Rotación bloqueada por el dispositivo'));
+                } catch (e) {}
+                
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
             }
         }
     </script>
