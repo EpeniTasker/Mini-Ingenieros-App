@@ -217,6 +217,25 @@
         // ==========================================
         // 📲 LÓGICA DEL BOTÓN MÁGICO DE INSTALACIÓN (PWA)
         // ==========================================
+        
+        // 1. GENERAR MANIFIESTO DINÁMICO (CRÍTICO PARA ANDROID)
+        const svgIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" fill="#ea580c" rx="100"/><text x="50%" y="55%" font-size="250" fill="white" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="middle" font-weight="bold">M-I</text></svg>';
+        const iconDataUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgIcon);
+        
+        document.getElementById('apple-icon-placeholder').href = iconDataUrl;
+
+        const manifestJSON = {
+            "name": "Mini-Ingenieros",
+            "short_name": "Mini-Ing.",
+            "start_url": window.location.href.split('?')[0],
+            "display": "standalone",
+            "background_color": "#0f172a",
+            "theme_color": "#ea580c",
+            "icons": [{ "src": iconDataUrl, "sizes": "512x512", "type": "image/svg+xml" }]
+        };
+        const manifestBlob = new Blob([JSON.stringify(manifestJSON)], {type: 'application/manifest+json'});
+        document.getElementById('manifest-placeholder').href = URL.createObjectURL(manifestBlob);
+
         let deferredPrompt;
         const installBtn = document.getElementById('btn-smart-install');
 
