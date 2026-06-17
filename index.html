@@ -80,6 +80,10 @@
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
         
+        /* CAPA DE SEGURIDAD 4: Escudos de Cristal Anti-Fugas de YouTube */
+        .glass-shield-top { position: absolute; top: 0; left: 0; width: 100%; height: 75px; z-index: 50; background: transparent; }
+        .glass-shield-bottom { position: absolute; bottom: 0; right: 0; width: 120px; height: 60px; z-index: 50; background: transparent; }
+
         .materials-box { background: white; border-radius: 12px; padding: 15px; margin-top: 20px; border: 1px solid #e2e8f0; }
         .materials-box h3 { color: var(--primary-dark); margin-bottom: 10px; font-size: 16px; }
         .materials-list { list-style-type: none; font-size: 14px; color: #64748b; }
@@ -321,9 +325,11 @@
 
         function openPlayer(proyecto) {
             document.getElementById('player-title').innerText = proyecto.title;
-            // Se asume que el enlace del Excel es el ID de YouTube
+            // Inyectamos los escudos invisibles y bloqueamos funciones nativas de YT (pantalla completa, teclado, anotaciones)
             document.getElementById('video-container').innerHTML = `
-                <iframe src="https://www.youtube.com/embed/${proyecto.url}?controls=0&modestbranding=1&rel=0&autoplay=1" allow="autoplay; fullscreen"></iframe>
+                <div class="glass-shield-top"></div>
+                <iframe src="https://www.youtube.com/embed/${proyecto.url}?controls=0&modestbranding=1&rel=0&autoplay=1&fs=0&iv_load_policy=3&disablekb=1&playsinline=1" allow="autoplay; encrypted-media"></iframe>
+                <div class="glass-shield-bottom"></div>
             `;
 
             const matList = document.getElementById('player-materials');
