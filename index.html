@@ -66,7 +66,9 @@
         /* ================= CATÁLOGO DE VIDEOS (GRID) ================= */
         .trial-banner { background: #dbeafe; color: #1e40af; padding: 12px; border-radius: 10px; text-align: center; font-weight: bold; margin-bottom: 20px; border: 1px solid #bfdbfe; }
         
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+        .category-title { font-size: 17px; font-weight: bold; color: var(--secondary); margin: 25px 0 12px 0; display: flex; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
+        
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; margin-bottom: 10px; }
         .video-card { background: var(--card-bg); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; cursor: pointer; transition: transform 0.2s; }
         .video-card:active { transform: scale(0.95); }
         
@@ -147,13 +149,14 @@
                 ⏳ Prueba Gratis: Te quedan <span id="trial-hours-left">48</span> horas.
             </div>
 
-            <p style="margin-bottom: 20px; text-align: center; color: #64748b; font-size: 14px;">Selecciona un proyecto y ¡manos a la obra!</p>
+            <p style="margin-bottom: 10px; text-align: center; color: #64748b; font-size: 14px;">Selecciona un proyecto y ¡manos a la obra!</p>
 
-            <div class="video-grid" id="catalog-grid">
+            <!-- Contenedor donde inyectaremos las Categorías y los Grids -->
+            <div id="catalog-container">
                 <!-- Los videos se inyectan aquí con JavaScript -->
             </div>
             
-            <p style="text-align:center; color:#94a3b8; font-size:12px; margin-top:30px; padding-bottom: 20px;">© 2026 Mini-Ingenieros VIP</p>
+            <p style="text-align:center; color:#94a3b8; font-size:12px; margin-top:40px; padding-bottom: 20px;">© 2026 Mini-Ingenieros VIP</p>
         </div>
 
         <!-- VISTA 4: REPRODUCTOR DE VIDEO -->
@@ -182,16 +185,35 @@
         // BASE DE DATOS DE PROYECTOS (Sacados de tu Drive)
         // ==========================================
         const proyectos = [
-            { id: 1, title: "Mano de Robot de Paja", icon: "🤖", mat: ["Pajitas (Pitillos)", "Hilo grueso", "Tijeras", "Cinta adhesiva"], url: "dQw4w9WgXcQ" },
-            { id: 2, title: "Avión Increíble con Rollo de Papel", icon: "✈️", mat: ["Rollo de cartón", "Cartulina", "Pegamento", "Tijeras"], url: "tgbNymZ7vqY" },
-            { id: 3, title: "Cajero Automático (Alcancía)", icon: "🏧", mat: ["Caja de cartón", "Motor pequeño", "Pilas", "Cables"], url: "J---aiyznGQ" },
-            { id: 4, title: "Garras de Wolverine de Cartón", icon: "🐾", mat: ["Cartón grueso", "Pega", "Regla", "Cúter"], url: "dQw4w9WgXcQ" },
-            { id: 5, title: "Helicóptero con Globo", icon: "🚁", mat: ["Globo", "Hélices de plástico", "Boquilla"], url: "tgbNymZ7vqY" },
-            { id: 6, title: "Construye un Camión Pepsi", icon: "🚚", mat: ["Latas vacías", "Silicona", "Tapas de botella (ruedas)", "Motor DC"], url: "J---aiyznGQ" },
-            { id: 7, title: "WALL-E Miniatura", icon: "🗑️", mat: ["Cartón", "Pintura amarilla", "2 Leds", "Pilas de reloj"], url: "dQw4w9WgXcQ" },
-            { id: 8, title: "Mini Filtro de Agua", icon: "💧", mat: ["Botella plástica", "Algodón", "Arena", "Piedras pequeñas"], url: "tgbNymZ7vqY" },
-            { id: 9, title: "Mario Kart Casero", icon: "🏎️", mat: ["Cartón", "Motor DC", "Gomas elásticas", "Interruptor"], url: "J---aiyznGQ" },
-            { id: 10, title: "Pistola Espía Hidráulica", icon: "🔫", mat: ["Jeringas", "Manguera delgada", "Agua", "Cartón"], url: "dQw4w9WgXcQ" }
+            // 🚗 Vehículos Motorizados
+            { id: 1, category: "🚗 Vehículos Motorizados", title: "Construye un Camión Pepsi", icon: "🚚", mat: ["Latas vacías", "Silicona", "Tapas de botella", "Motor DC"], url: "dQw4w9WgXcQ" },
+            { id: 2, category: "🚗 Vehículos Motorizados", title: "Mario Kart Casero", icon: "🏎️", mat: ["Cartón", "Motor DC", "Gomas elásticas", "Interruptor"], url: "tgbNymZ7vqY" },
+            { id: 3, category: "🚗 Vehículos Motorizados", title: "Coche eléctrico con botella PET", icon: "🚙", mat: ["Botella de plástico", "Motor pequeño", "Pilas", "Ruedas"], url: "J---aiyznGQ" },
+            
+            // ✈️ Aeronáutica y Vuelo
+            { id: 4, category: "✈️ Aeronáutica y Vuelo", title: "Avión Increíble con Rollo de Papel", icon: "✈️", mat: ["Rollo de cartón", "Cartulina", "Pegamento", "Tijeras"], url: "dQw4w9WgXcQ" },
+            { id: 5, category: "✈️ Aeronáutica y Vuelo", title: "Helicóptero con Globo", icon: "🚁", mat: ["Globo", "Hélices de plástico", "Boquilla"], url: "tgbNymZ7vqY" },
+            { id: 6, category: "✈️ Aeronáutica y Vuelo", title: "Cohete Volador a la Luna", icon: "🚀", mat: ["Botella", "Cartón", "Vinagre", "Bicarbonato"], url: "J---aiyznGQ" },
+
+            // 🤖 Robótica y Mecánica
+            { id: 7, category: "🤖 Robótica y Mecánica", title: "Mano de Robot de Paja", icon: "🦾", mat: ["Pajitas (Pitillos)", "Hilo grueso", "Tijeras", "Cinta adhesiva"], url: "dQw4w9WgXcQ" },
+            { id: 8, category: "🤖 Robótica y Mecánica", title: "WALL-E Miniatura", icon: "🗑️", mat: ["Cartón", "Pintura amarilla", "2 Leds", "Pilas de reloj"], url: "tgbNymZ7vqY" },
+            { id: 9, category: "🤖 Robótica y Mecánica", title: "Mano de Policía Robot", icon: "🤖", mat: ["Cartón", "Cuerda", "Ligas", "Silicón"], url: "J---aiyznGQ" },
+
+            // 🎮 Juegos Arcade
+            { id: 10, category: "🎮 Juegos Arcade", title: "Mini Basket / Baloncesto NBA", icon: "🏀", mat: ["Cartón", "Pelota de ping pong", "Paletas de helado"], url: "dQw4w9WgXcQ" },
+            { id: 11, category: "🎮 Juegos Arcade", title: "Máquina de Bolas", icon: "🎰", mat: ["Cartón grande", "Canicas", "Gomas elásticas", "Palitos"], url: "tgbNymZ7vqY" },
+            { id: 12, category: "🎮 Juegos Arcade", title: "Fútbol de Mesa", icon: "⚽", mat: ["Caja de zapatos", "Palitos de madera", "Pinzas de ropa"], url: "J---aiyznGQ" },
+
+            // 🦸‍♂️ Acción y Superhéroes
+            { id: 13, category: "🦸‍♂️ Acción y Superhéroes", title: "Garras de Wolverine de Cartón", icon: "🐾", mat: ["Cartón grueso", "Pega", "Regla", "Cúter"], url: "dQw4w9WgXcQ" },
+            { id: 14, category: "🦸‍♂️ Acción y Superhéroes", title: "Pistola Espía Hidráulica", icon: "🔫", mat: ["Jeringas", "Manguera delgada", "Agua", "Cartón"], url: "tgbNymZ7vqY" },
+            { id: 15, category: "🦸‍♂️ Acción y Superhéroes", title: "Arma Super Héroe", icon: "🛡️", mat: ["Cartón", "Gomas", "Pintura"], url: "J---aiyznGQ" },
+
+            // 💡 Inventos Curiosos
+            { id: 16, category: "💡 Inventos Curiosos", title: "Cajero Automático (Alcancía)", icon: "🏧", mat: ["Caja de cartón", "Motor pequeño", "Pilas", "Cables"], url: "dQw4w9WgXcQ" },
+            { id: 17, category: "💡 Inventos Curiosos", title: "Dispensador de Dulces", icon: "🍬", mat: ["Cartón", "Botella plástica", "Silicona", "Dulces"], url: "tgbNymZ7vqY" },
+            { id: 18, category: "💡 Inventos Curiosos", title: "Mini Filtro de Agua", icon: "💧", mat: ["Botella plástica", "Algodón", "Arena", "Piedras pequeñas"], url: "J---aiyznGQ" }
         ];
 
         // ==========================================
@@ -284,25 +306,49 @@
         };
 
         function initCatalog() {
-            const grid = document.getElementById('catalog-grid');
-            grid.innerHTML = '';
+            const catalogContainer = document.getElementById('catalog-container');
+            catalogContainer.innerHTML = '';
 
-            proyectos.forEach(p => {
-                const card = document.createElement('div');
-                card.className = 'video-card';
-                card.onclick = () => openPlayer(p);
-                
-                card.innerHTML = `
-                    <div class="thumb-placeholder">
-                        ${p.icon}
-                        <div class="play-icon">▶</div>
-                    </div>
-                    <div class="video-info">
-                        <div class="video-title">${p.title}</div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
+            // 1. Agrupar los proyectos por categoría usando Reduce
+            const groupedProjects = proyectos.reduce((acc, curr) => {
+                if (!acc[curr.category]) acc[curr.category] = [];
+                acc[curr.category].push(curr);
+                return acc;
+            }, {});
+
+            // 2. Crear las secciones visuales para cada categoría
+            for (const category in groupedProjects) {
+                // Título de la Categoría
+                const catTitle = document.createElement('h3');
+                catTitle.className = 'category-title';
+                catTitle.innerText = category;
+                catalogContainer.appendChild(catTitle);
+
+                // Grid (Cuadrícula) para los videos de esta categoría
+                const grid = document.createElement('div');
+                grid.className = 'video-grid';
+
+                // Insertar los videos dentro de la cuadrícula
+                groupedProjects[category].forEach(p => {
+                    const card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.onclick = () => openPlayer(p);
+                    
+                    card.innerHTML = `
+                        <div class="thumb-placeholder">
+                            ${p.icon}
+                            <div class="play-icon">▶</div>
+                        </div>
+                        <div class="video-info">
+                            <div class="video-title">${p.title}</div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+
+                // Añadir el grid debajo del título de la categoría
+                catalogContainer.appendChild(grid);
+            }
         }
 
         function openPlayer(proyecto) {
